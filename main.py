@@ -31,15 +31,17 @@ class DrawingApp:
         self.brush_size = tk.IntVar()
         self.brush_size.set(1)
 
-        self.setup_ui()
-
         # Переменные, отслеживающие последние координаты x и y, на которых пользователь отпустил мышь
         self.last_x, self.last_y = None, None
+
+        # Цвет пера по умолчанию
         self.pen_color = 'black'
 
         # Привязка события к холсту
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
+
+        self.setup_ui()
 
 
     def setup_ui(self):
@@ -69,6 +71,17 @@ class DrawingApp:
 
         sizes = [1, 2, 5, 10]
         self.create_brush_size_menu(brush_size_frame, sizes)
+
+        eraser_button = tk.Button(control_frame, text="Ластик", command=self.eraser)
+        eraser_button.pack(side=tk.LEFT)
+
+
+    def eraser(self):
+        """
+        Меняет цвет пера на "white" при нажатии на кнопку ластика.
+        """
+
+        self.pen_color = "white"
 
 
     def create_brush_size_menu(self, parent, sizes):
