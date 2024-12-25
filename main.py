@@ -34,7 +34,7 @@ class DrawingApp:
         # Переменные, отслеживающие последние координаты x и y, на которых пользователь отпустил мышь
         self.last_x, self.last_y = None, None
 
-        # Цвет пера по умолчанию
+        # Цвет кисти по умолчанию
         self.pen_color = 'black'
 
         # Привязка события к холсту
@@ -60,8 +60,8 @@ class DrawingApp:
         color_button = tk.Button(control_frame, text="Выбрать цвет", command=self.choose_color)
         color_button.pack(side=tk.LEFT)
 
-        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
-        save_button.pack(side=tk.LEFT)
+        brush_button = tk.Button(control_frame, text="Кисть", command=self.brush)
+        brush_button.pack(side=tk.LEFT)
 
         brush_size_label = tk.Label(control_frame, text="Размер кисти:")
         brush_size_label.pack(side=tk.LEFT)
@@ -75,13 +75,23 @@ class DrawingApp:
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.eraser)
         eraser_button.pack(side=tk.LEFT)
 
+        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
+        save_button.pack(side=tk.LEFT)
+
 
     def eraser(self):
         """
-        Меняет цвет пера на "white" при нажатии на кнопку ластика.
+        Меняет цвет кисти на "white" при нажатии на кнопку ластика.
         """
 
         self.pen_color = "white"
+
+    def brush(self):
+        """
+        Меняет цвет кисти на "black" при нажатии на кнопку кисти.
+        """
+
+        self.pen_color = 'black'
 
 
     def create_brush_size_menu(self, parent, sizes):
