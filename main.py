@@ -38,6 +38,7 @@ class DrawingApp:
         self.pen_color = 'black'
 
         # Привязка события к холсту
+        self.canvas.bind('<Button-3>', self.pick_color)
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
@@ -86,6 +87,7 @@ class DrawingApp:
 
         self.pen_color = "white"
 
+
     def brush(self):
         """
         Меняет цвет кисти на "black" при нажатии на кнопку кисти.
@@ -117,6 +119,21 @@ class DrawingApp:
         """
 
         self.brush_size.set(new_size)
+
+
+    def pick_color(self, event):
+        """
+        Функция для выбора цвета с помощью пипетки.
+        :param event: Событие, содержащее координаты курсора.
+        """
+
+        # Получаем координаты курсора на холсте в момент события.
+        x = event.x
+        y = event.y
+
+        pixel_color = self.image.getpixel((x, y))[:3]
+        pipette = "#{:02X}{:02X}{:02X}".format(*pixel_color)
+        self.pen_color = pipette
 
 
     def paint(self, event):
