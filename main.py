@@ -42,6 +42,9 @@ class DrawingApp:
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
+        self.root.bind('<Control-s>', lambda event: self.save_image())
+        self.root.bind('<Control-c>', lambda event: self.choose_color())
+
         self.setup_ui()
 
 
@@ -99,6 +102,7 @@ class DrawingApp:
     def create_brush_size_menu(self, parent, sizes):
         """
         Создает меню для выбора размера кисти и шкалу для его изменения.
+
         :param parent: Родительский виджет, внутри которого будет создано меню и шкала.
         :param sizes: Список доступных размеров кисти.
         """
@@ -115,6 +119,7 @@ class DrawingApp:
     def update_brush_size(self, new_size):
         """
         Обновляет размер кисти.
+
         :param new_size: Новое значение размера кисти.
         """
 
@@ -124,6 +129,7 @@ class DrawingApp:
     def pick_color(self, event):
         """
         Функция для выбора цвета с помощью пипетки.
+
         :param event: Событие, содержащее координаты курсора.
         """
 
