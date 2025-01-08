@@ -15,6 +15,7 @@ class DrawingApp:
         :param root: Корневой виджет.
         """
 
+        self.color_preview = None
         self.brush_size_scale = None
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
@@ -58,14 +59,14 @@ class DrawingApp:
         control_frame.pack(fill=tk.X)
 
         # Создание кнопок
-        clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
-        clear_button.pack(side=tk.LEFT)
-
         color_button = tk.Button(control_frame, text="Выбрать цвет", command=self.choose_color)
-        color_button.pack(side=tk.LEFT)
-
+        color_button.pack(side=tk.LEFT, padx=(10, 0))
+        
         brush_button = tk.Button(control_frame, text="Кисть", command=self.brush)
         brush_button.pack(side=tk.LEFT)
+
+        eraser_button = tk.Button(control_frame, text="Ластик", command=self.eraser)
+        eraser_button.pack(side=tk.LEFT)
 
         brush_size_label = tk.Label(control_frame, text="Размер кисти:")
         brush_size_label.pack(side=tk.LEFT)
@@ -76,11 +77,14 @@ class DrawingApp:
         sizes = [1, 2, 5, 10]
         self.create_brush_size_menu(brush_size_frame, sizes)
 
-        eraser_button = tk.Button(control_frame, text="Ластик", command=self.eraser)
-        eraser_button.pack(side=tk.LEFT)
+        clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
+        clear_button.pack(side=tk.LEFT)
 
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
+
+        self.color_preview = tk.Label(control_frame, bg=self.pen_color, width=2, height=1)
+        self.color_preview.pack(side=tk.RIGHT, padx=(0, 10))
 
 
     def eraser(self):
@@ -89,6 +93,7 @@ class DrawingApp:
         """
 
         self.pen_color = "white"
+        self.update_preview_color()
 
 
     def brush(self):
@@ -97,6 +102,7 @@ class DrawingApp:
         """
 
         self.pen_color = 'black'
+        self.update_preview_color()
 
 
     def create_brush_size_menu(self, parent, sizes):
@@ -140,6 +146,7 @@ class DrawingApp:
         pixel_color = self.image.getpixel((x, y))[:3]
         pipette = "#{:02X}{:02X}{:02X}".format(*pixel_color)
         self.pen_color = pipette
+        self.update_preview_color()
 
 
     def paint(self, event):
@@ -187,6 +194,15 @@ class DrawingApp:
         """
 
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
+        self.update_preview_color()
+
+
+    def update_preview_color(self):
+        """
+        Обновляет цвет предварительного просмотра до текущего цвета кисти.
+        """
+
+        self.color_preview.config(bg=self.pen_color)
 
 
     def save_image(self):
