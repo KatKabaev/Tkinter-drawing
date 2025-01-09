@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import colorchooser, filedialog, messagebox
+from tkinter import colorchooser, filedialog, messagebox, simpledialog
 from PIL import Image, ImageDraw
 
 
@@ -60,31 +60,34 @@ class DrawingApp:
 
         # Создание кнопок
         color_button = tk.Button(control_frame, text="Выбрать цвет", command=self.choose_color)
-        color_button.pack(side=tk.LEFT, padx=(10, 0))
+        color_button.grid(row=0, column=0, padx=(10, 0), pady=(10, 0), sticky=tk.EW)
         
         brush_button = tk.Button(control_frame, text="Кисть", command=self.brush)
-        brush_button.pack(side=tk.LEFT)
+        brush_button.grid(row=0, column=1, pady=(10, 0), sticky=tk.EW)
 
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.eraser)
-        eraser_button.pack(side=tk.LEFT)
+        eraser_button.grid(row=0, column=2, pady=(10, 0), sticky=tk.EW)
 
         brush_size_label = tk.Label(control_frame, text="Размер кисти:")
-        brush_size_label.pack(side=tk.LEFT)
+        brush_size_label.grid(row=0, column=3, pady=(10, 0), sticky=tk.EW)
 
         brush_size_frame = tk.Frame(control_frame)
-        brush_size_frame.pack(side=tk.LEFT)
+        brush_size_frame.grid(row=0, column=4, pady=(10, 0), sticky=tk.EW)
 
         sizes = [1, 2, 5, 10]
         self.create_brush_size_menu(brush_size_frame, sizes)
 
+        size_button = tk.Button(control_frame, text="Размер холста", command=self.size_canvas)
+        size_button.grid(row=0, column=5, pady=(10, 0), sticky=tk.EW)
+
         clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
-        clear_button.pack(side=tk.LEFT)
+        clear_button.grid(row=0, column=6, pady=(10, 0), sticky=tk.EW)
 
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
-        save_button.pack(side=tk.LEFT)
+        save_button.grid(row=0, column=7, pady=(10, 0), sticky=tk.EW)
 
         self.color_preview = tk.Label(control_frame, bg=self.pen_color, width=2, height=1)
-        self.color_preview.pack(side=tk.RIGHT, padx=(0, 10))
+        self.color_preview.grid(row=0, column=8, padx=(10, 10), pady=(10, 0), sticky=tk.EW)
 
 
     def eraser(self):
@@ -147,6 +150,19 @@ class DrawingApp:
         pipette = "#{:02X}{:02X}{:02X}".format(*pixel_color)
         self.pen_color = pipette
         self.update_preview_color()
+
+
+    def size_canvas(self):
+        """
+        Обновляет размер холста.
+        """
+
+        width = simpledialog.askinteger("Введите новые размеры холста", "Ширина (min=100, max=1800):")
+        height = simpledialog.askinteger("Введите новые размеры холста", "Высота (min=100, max=900):")
+
+        self.canvas.config(width=width, height=height)
+        self.image = Image.new("RGB", (width, height), "white")
+        self.draw = ImageDraw.Draw(self.image)
 
 
     def paint(self, event):
