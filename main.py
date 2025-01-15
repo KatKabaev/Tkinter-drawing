@@ -46,6 +46,8 @@ class DrawingApp:
         self.root.bind('<Control-s>', lambda event: self.save_image())
         self.root.bind('<Control-c>', lambda event: self.choose_color())
 
+        self.text_mode = False
+
         self.setup_ui()
 
 
@@ -80,14 +82,20 @@ class DrawingApp:
         size_button = tk.Button(control_frame, text="Размер холста", command=self.size_canvas)
         size_button.grid(row=0, column=5, pady=(10, 0), sticky=tk.EW)
 
+        text_button = tk.Button(control_frame, text="Текст", command=self.add_text)
+        text_button.grid(row=0, column=6, pady=(10, 0), sticky=tk.EW)
+
+        bg_button = tk.Button(control_frame, text="Изменить фон", command=self.change_bg_color)
+        bg_button.grid(row=0, column=7, pady=(10, 0), sticky=tk.EW)
+
         clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
-        clear_button.grid(row=0, column=6, pady=(10, 0), sticky=tk.EW)
+        clear_button.grid(row=0, column=8, pady=(10, 0), sticky=tk.EW)
 
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
-        save_button.grid(row=0, column=7, pady=(10, 0), sticky=tk.EW)
+        save_button.grid(row=0, column=9, pady=(10, 0), sticky=tk.EW)
 
         self.color_preview = tk.Label(control_frame, bg=self.pen_color, width=2, height=1)
-        self.color_preview.grid(row=0, column=8, padx=(10, 10), pady=(10, 0), sticky=tk.EW)
+        self.color_preview.grid(row=0, column=10, padx=(10, 10), pady=(10, 0), sticky=tk.EW)
 
 
     def eraser(self):
@@ -219,6 +227,41 @@ class DrawingApp:
         """
 
         self.color_preview.config(bg=self.pen_color)
+
+    def add_text(self):
+        """
+        Добавляет текст на холст.
+        """
+
+        # Запрос текста у пользователя
+        text = simpledialog.askstring("Ввод текста", "Введите текст:")
+        if text:
+            self.text_mode = True
+            self.current_text = text
+            self.canvas.bind('<Button-1>', self.place_text)
+
+    def place_text(self, event):
+        """
+        Размещает введенный текст на холсте.
+        """
+
+        if self.text_mode:
+            x, y = event.x, event.y
+            self.canvas.create_text(x, y, text=self.current_text, fill=self.pen_color, anchor='nw')
+            self.draw.text((x, y), self.current_text, fill=self.pen_color)
+            self.text_mode = False
+            self.canvas.unbind('<Button-1>')
+
+    def change_bg_color(self):
+        """
+        Изменяет цвет фона холста.
+        """
+
+        color = colorchooser.askcolor(title="Выбрать цвет фона")
+        if color[1]:
+            self.canvas.config(bg=color[1])
+            self.image = Image.new("RGB", (self.canvas.winfo_width(), self.canvas.winfo_height()), color[1])
+            self.draw = ImageDraw.Draw(self.image)
 
 
     def save_image(self):
